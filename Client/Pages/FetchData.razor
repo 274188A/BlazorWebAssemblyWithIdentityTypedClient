@@ -3,7 +3,7 @@
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using BlazorWebAssemblyWithIdentityTypedClient.Shared
 @attribute [Authorize]
-@inject HttpClient Http
+@inject WeatherClient WeatherClient
 
 <h1>Weather forecast</h1>
 
@@ -39,18 +39,11 @@ else
 }
 
 @code {
-    private WeatherForecast[] forecasts;
+    private IEnumerable<WeatherForecast> forecasts;
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
+        forecasts = await WeatherClient.GetWeatherForeacasts();
     }
 
 }
